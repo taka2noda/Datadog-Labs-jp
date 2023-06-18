@@ -144,6 +144,38 @@ logs:
 ```
 C:\inetpub\logs\LogFiles\W3SVC1\
 ```
+
+
+ガイド：https://docs.datadoghq.com/logs/guide/log-collection-troubleshooting-guide/?tab=windowspowershell#permission-issues-tailing-log-files
+
+以下、PowerShellでの実行例です。
+
+3-1. PowerShellを起動する
+
+3-2. PowerShellにて以下コマンドを実行し、既存の権限を確認する(ddagentuserに対して権限が付与されていないことを確認する)
+```
+get-acl "C:\inetpub\logs\LogFiles\W3SVC1\" | fl
+```
+3-3. 以下コマンドを実行し、ddagentuserにLog連携するディレクトリへの権限を付与する
+```
+$acl = Get-Acl "C:\inetpub\logs\LogFiles\W3SVC1\"
+$AccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule("ddagentuser","ReadAndExecute","Allow")
+$acl.SetAccessRule($AccessRule)
+$acl | Set-Acl "C:\inetpub\logs\LogFiles\W3SVC1\"
+```
+3-4. 再度権限確認のコマンドを実行し、以下のようにddagentuserに対して権限が付与されていることを確認する
+
+実行コマンド
+```
+get-acl "C:\inetpub\logs\LogFiles\W3SVC1\" | fl
+```
+
+結果
+```
+Access : NT AUTHORITY\SYSTEM Allow  FullControl
+         EC2AMAZ-NK12S0N\ddagentuser Allow  ReadAndExecute, Synchronize
+```
+
 以上でIISインテグレーション設定が完了です。
 
 ## IIS関連データ収集確認
