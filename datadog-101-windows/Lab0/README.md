@@ -32,5 +32,7 @@ http://パブリックIPアドレス/employe.aspx
 |1 |sato  |
 |2 |suzuki|
 
+以上でLab0は終了です。[Lab1](../Lab1)以降はハンズオンセッション内で実施します。
+
 
 
